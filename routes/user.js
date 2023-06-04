@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {handleSignup,login,checkUN,handlefgtpass,validToken,GetUser,logoutUser,ajax1} from '../controllers/users.js'
+import {handleSignup,login,checkUN,handlefgtpass,validToken,GetUser,logoutUser,ajax1, DeleteUserr,checkout} from '../controllers/users.js'
 
 import {signup_model} from '../models/signupschema.js'
 import bodyParser from "body-parser";
@@ -13,6 +13,7 @@ router.get("/login", (req, res)=> {
   res.render("login", { user: (req.session.user === undefined ? "" : req.session.user) });
 });
 router.post("/login", login);
+
 
 
 // router.post("/login", login,async (req, res)=> {
@@ -29,7 +30,8 @@ router.get("/signup", function (req, res) {
   res.render("signup",{ user: (req.session.user === undefined ? "" : req.session.user) });
 });
 
-router.post('/signup',ajax1,handleSignup)
+router.post('/signup',handleSignup)
+router.post('/check',ajax1);
 
 
 router.get('/forget-pass',(req,res)=>{
@@ -51,13 +53,53 @@ router.post('/reset',validToken);
 router.get('/profile', (req, res) => {
   res.render('profile', { user: (req.session.user === undefined ? "" : req.session.user) });
 });
+
+router.get('/success', (req, res) => {
+  // Access the GET parameters from the URL
+  const email = req.query.email;
+  var query = { mail: email };
+
+  signup_model.findOne(query)
+    .then(result => {
+      req.session.user = result;
+      res.redirect('/');
+    })
+    .catch(err => {
+      console.log(err);
+    });
+
+  console.log(email); // Output: value1
+
+  // Handle the logic for the /success route
+});
+router.get('/cancel', (req, res) => {
+  // Access the GET parameters from the URL
+  const email = req.query.email;
+  var query = { mail: email };
+
+  signup_model.findOne(query)
+    .then(result => {
+      req.session.user = result;
+      res.redirect('/');
+    })
+    .catch(err => {
+      console.log(err);
+    });
+
+  console.log(email); // Output: value1
+
+  // Handle the logic for the /success route
+});
+
+
 router.post('/profile',GetUser);
 
+router.post('/checkout',checkout);
 
 router.post('/checkUN', checkUN);
 
 router.get('/logout', logoutUser);
-
+router.post('/delete',DeleteUserr)
 
 // check if logged in
 router.use((req, res, next) => {
@@ -71,6 +113,7 @@ router.use((req, res, next) => {
   }
 });
 // router.post("/chatt",msg);
+
 
 
 

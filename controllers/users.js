@@ -1,4 +1,10 @@
 import { signup_model } from "../models/signupschema.js";
+import {body,validationResult} from 'express-validator';
+import{Tripss} from'../models/tripsSchema.js';
+
+import Stripe from 'stripe';
+const stripe = new Stripe('sk_test_51NEZrSBSmlXfR1acKokUt6gxjLNgc1h0hCWF3Iu08TSrthiGWkOqPQddUzsb3BFJrgPhfC1SE0oXZqaKuGqgx3QG00FjWHuR7C');
+ 
 
 import fs from "fs";
 import bcrypt from 'bcrypt';
@@ -112,6 +118,9 @@ else{
 }
 
 
+// //if (password !== 'password123') {
+//   return res.status(401).json({ error: 'Invalid password' });
+// }
 
 // Controller for handling the signup form submission
 const handleSignup = async (req, res, next) => 
@@ -153,7 +162,7 @@ const login = async (req, res) => {
   try {
     const check = await signup_model.findOne({ username: req.body.username });
     if (check == null) {
-      res.send("taken");
+      res.send("NULL");
     } else {
       const pcomp = await bcrypt.compare(req.body.password, check.password);
       if (pcomp) {
@@ -248,8 +257,136 @@ const GetUser = async (req, res) => {
       });
       
 };
+
 const logoutUser=(req,res)=>{
 req.session.destroy();
 res.redirect('/');
 }
-export { handleSignup,login,checkUN,handlefgtpass,validToken,GetUser,logoutUser,ajax1};
+
+// const DeleteUserr = (req, res) => {
+//   const userId = req.session.user.id; 
+//   const userImgPath = req.session.user.img;
+// console.log(req.session.user);
+//   signup_model.findByIdAndDelete({_id:req.session.user.id})
+//     .then(result => {
+//       // Delete the user's image file
+//       // fs.unlink(path.join(__dirname, '../public/resources/', userImgPath), (err) => {
+//         if (err) {
+//           console.log(err);
+//         }
+//         res.redirect('/');
+//      //  });
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       res.status(500).send('Internal Server Error');
+//     });
+// };
+const DeleteUserr = (req, res) => {
+  const userId = req.session.user._id;
+  const userImgPath = req.session.user.img;
+
+  console.log(req.session.user);
+
+  signup_model
+    .findByIdAndDelete(userId)
+    .then(result => {
+      // Delete the user's image file
+      // fs.unlink(path.join(__dirname, '../public/resources/', userImgPath), (err) => {
+      //   if (err) {
+      //     console.log(err);
+      //   }
+      req.session.destroy();
+      res.redirect('/');
+      // });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    });
+};
+
+
+
+const checkEmailAvailability = async (email) => {
+  try {
+    const user = await signup_model.findOne({ email });
+    return user ? false : true;
+  } catch (error) {
+    console.log('Error checking email availability:', error);
+    return false;
+  }
+};
+
+// app.post("/create-checkout-session", async (req, res) => { 
+//   const { product } = req.body; 
+//   const session = await stripe.checkout.sessions.create({ 
+//     payment_method_types: ["card"], 
+//     line_items: [ 
+//       { 
+//         price_data: {  
+//           currency: "usd", 
+//           product_data: { 
+//             name: "test", 
+//           }, 
+//           unit_amount: 100 * 100, 
+//         }, 
+//         quantity: 2, 
+//       }, 
+//     ], 
+//     mode: "payment", 
+//     success_url: "http://localhost:8080/success", 
+//     cancel_url: "http://localhost:8080/cancel", 
+//   }); 
+//   res.json({ id: session.id }); 
+//   console.log(session.id );
+// }); 
+
+const checkout = async (req, res) => {
+  try {
+    var query = { name: req.body.name };
+    const result = await Tripss.findOne(query);
+    const sess = req.session.user;
+    console.log(sess);
+
+    if (!result) {
+      throw new Error('Trip not found');
+    }
+
+    console.log(result.price);
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: result.name,
+            },
+            unit_amount: result.price * 100,
+          },
+          quantity: req.body.qunt,
+        },
+      ],
+      mode: 'payment',
+      success_url: `http://127.0.0.1:8080/user/success?email=${req.session.user.mail}`, // Append user session as a query parameter
+      cancel_url: `http://127.0.0.1:8080/user/?email=${req.session.user.mail}`,
+    });
+
+    console.log(session.url);
+    res.redirect(303, session.url);
+    // res.json({ id: session.id });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+};
+
+
+
+
+
+
+
+
+export { handleSignup,login,checkUN,handlefgtpass,validToken,ajax1,GetUser,logoutUser,DeleteUserr,checkout};
