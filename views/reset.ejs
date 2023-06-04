@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel ="stylesheet"type="text/css"href="../css/reset.css">
+    <%-include('./partials/icon.ejs')%>
+    <title>Reset-pass</title>
+    <script>
+        function validate(form) {
+          const password = form.elements['p_reset'].value;
+          const confirmPassword = form.elements['cp_reset'].value;
+        
+          if (password !== confirmPassword) {
+            document.getElementById('err').textContent = 'Passwords do not match';
+            return false; 
+          }
+        
+          return true; 
+        }
+        </script>
+</head>
+<body>
+    <div>
+        <form action="/user/reset" method="post" onsubmit="return validate(this)">
+            <input type="password" name="p_reset" placeholder="enter your password" id="1">
+            <input type="password" name="cp_reset" placeholder="re-enter your password" id="2">
+            <input type="text" name="token" placeholder="enter your token" >
+            <input type="submit" name="submit">
+            <span id="err"></span>
+            <h1>Please check your mail for the token number !</h1>
+             
+        </form>
+    </div>
+</body>
+</html>
