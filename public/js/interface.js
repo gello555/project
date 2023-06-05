@@ -14,22 +14,22 @@
 // sessionStorage.setItem('options',JSON.stringify(ids));
 
 
-// const elementId = "argentina";
+// const gello = "angola";
 // fetch('/book/', {
 //   method: 'POST',
 //   headers: {
 //     'Content-Type': 'application/json'
 //   },
-//   body: JSON.stringify({ elementId })
+//   body: JSON.stringify({ gello })
 // })
+//   .then(response => response.json())
+//   .then(data => console.log(data + "HIII"))
+//   .catch(error => console.error(error + " HOOO"));
+
+
+
+// const elementId = "argentina";
+// fetch(`/?elementId=${elementId}`)
 //   .then(response => response.json())
 //   .then(data => console.log(data))
 //   .catch(error => console.error(error));
-
-
-
-const elementId = "argentina";
-fetch(`/?elementId=${elementId}`)
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error(error));
