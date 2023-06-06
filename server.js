@@ -20,13 +20,29 @@ import admin_router from "./routes/admin.js";
 
 
 const hostname = "127.0.0.1";
-const port = 8080;
+const port = 5555;
 //Read the current directory name
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
 console.log(`Project Root dir : ${__dirname}`);
 
 let app = express();
+
+// for auto refresh
+//const path = require("path");
+import livereload from 'livereload';
+const liveReloadServer = livereload.createServer();
+liveReloadServer.watch(path.join(__dirname, 'public'));
+ 
+ 
+import connectLivereload from 'connect-livereload';
+app.use(connectLivereload());
+ 
+liveReloadServer.server.once("connection", () => {
+  setTimeout(() => {
+    liveReloadServer.refresh("/");
+  }, 100);
+}); 
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
