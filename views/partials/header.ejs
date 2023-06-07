@@ -70,62 +70,63 @@
   <!--End of Tawk.to Script-->
 </head>
 
-<head>
-  <link rel="stylesheet" href="/css/mystyle.css">
-</head>
-
-<nav class="navbar navbar-expand-md navbar-dark">
-  <div class="container nav-contents">
-    <a href="/" class="navbar-brand"><b>Traventure</b></a>
-
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#bar"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="bar">
-      <ul class="navbar-nav nav-items ms-auto">
-        <li class="nav-item">
-          <a href="/" class="nav-link">Home</a>
-        </li>
-        
-        <li class="nav-item">
-          <a href="/user/pack" class="nav-link">Packages</a>
-        </li>
-        <li class="nav-item">
-          <a href="/gallery" class="nav-link">Gallery</a>
-        </li>
-        <li class="nav-item">
-          <a href="/about" class="nav-link about">About</a>
-        </li>
-
-        <% if(user === "") { %>
+  <head>
+    <link rel="stylesheet" href="/css/mystyle.css">
+  </head>
+  
+  <nav class="navbar navbar-expand-md navbar-dark">
+    <div class="container nav-contents">
+      <a href="/" class="navbar-brand"><b>Traventure</b></a>
+  
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#bar"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="bar">
+        <ul class="navbar-nav nav-items ms-auto">
           <li class="nav-item">
-            <a href="/user/login" class="nav-link login">Login</a>
+            <a href="/" class="nav-link">Home</a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="/user/pack" class="nav-link">Packages</a>
           </li>
           <li class="nav-item">
-            <a href="/user/signup" class="nav-link signup">Sign Up</a>
+            <a href="/book" class="nav-link">Map</a> 
           </li>
-        <% } else { %>
-          <% if(user.type==="admin") { %>
+          <li class="nav-item">
+            <a href="/about" class="nav-link about">About</a>
+          </li>
+  
+          <% if(user === "") { %>
             <li class="nav-item">
-              <a href="/admin" class="nav-link">Admin</a>
+              <a href="/user/login" class="nav-link login">Login</a>
             </li>
+            <li class="nav-item">
+              <a href="/user/signup" class="nav-link signup">Sign Up</a>
+            </li>
+          <% } else { %>
+            <% if(user.type==="admin") { %>
+              <li class="nav-item">
+                <a href="/admin" class="nav-link">Admin</a>
+              </li>
+            <% } %>
+            <li class="nav-item">
+              <a href="/user/profile" class="nav-link">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a href="/user/logout" class="nav-link">Logout</a>
+            </li>
+          
           <% } %>
-          <li class="nav-item">
-            <a href="/user/profile" class="nav-link">Profile</a>
-          </li>
-          <li class="nav-item">
-            <a href="/user/logout" class="nav-link">Logout</a>
-          </li>
-        
-        <% } %>
-
-      </ul>
+  
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+  

@@ -4,6 +4,8 @@ import express from "express";
 import {signup_model} from '../models/signupschema.js'
 import bodyParser from "body-parser";
 import { Tripss } from "../models/tripsSchema.js";
+import {Order} from '../models/ordersSchema.js';
+
 const app = express();
 const router = Router();
 router.use(bodyParser.json());
@@ -56,7 +58,6 @@ router.get('/profile', (req, res) => {
 });
 
 router.get('/success', (req, res) => {
-  // Access the GET parameters from the URL
   const email = req.query.email;
   var query = { mail: email };
 
@@ -69,9 +70,8 @@ router.get('/success', (req, res) => {
       console.log(err);
     });
 
-  console.log(email); // Output: value1
+  console.log(email); 
 
-  // Handle the logic for the /success route
 });
 
 
@@ -79,7 +79,6 @@ router.get('/success', (req, res) => {
 
 
 router.get('/cancel', (req, res) => {
-  // Access the GET parameters from the URL
   const email = req.query.email;
   var query = { mail: email };
 
@@ -92,9 +91,8 @@ router.get('/cancel', (req, res) => {
       console.log(err);
     });
 
-  console.log(email); // Output: value1
+  console.log(email); 
 
-  // Handle the logic for the /success route
 });
 
 
@@ -126,40 +124,18 @@ router.get("/pack", async function (req, res) {
 });
 
 
-router.get('/wishlist', (req, res) => {
-  const wishlist = [
-    {
-      title: 'Trip 1',
-      description: 'Lorem ipsum dolor sit amet',
-      price: '$100',
-      image: 'images/trip-1.jpg'
-    },
-    {
-      title: 'Trip 2',
-      description: 'Consectetur adipiscing elit',
-      price: '$200',
-      image: 'images/trip-2.jpg'
-    },
-    {
-      title: 'Trip 3',
-      description: 'Sed do eiusmod tempor incididunt',
-      price: '$300',
-      image: 'images/trip-3.jpg'
-    }
-  ];
-  res.render('wishlist', { wishlist });
+
+
+router.get('/orders', async (req, res) => {
+  Order.findOne({ userId: req.session.user.id })
+  .then(result => {
+     res.render('order',{result})
+  })
+  .catch(err => {
+      console.log(err);
+  });
 });
 
-// router.use((req, res, next) => {
-//   req.session.user=req.body.username;
-//   if (req.session.user !== undefined) 
-//   {
-//       next();
-//   }
-//   else {
-//       res.render('error', { err: 'You must login to access this page', user: (req.session.user === undefined ? "" : req.session.user) })
-//   }
-// });
 
 
 
