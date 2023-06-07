@@ -20,7 +20,7 @@ import admin_router from "./routes/admin.js";
 
 
 const hostname = "127.0.0.1";
-const port = 5555;
+const port = 8080;
 //Read the current directory name
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
